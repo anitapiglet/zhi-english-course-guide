@@ -493,9 +493,8 @@
   .casequote{font-size:13.5px;color:#3c463f;font-style:italic;margin:0;}
 
   /* redesigned plan-spec layout (parent-facing) */
-  .specgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 24px;margin-top:2px;}
-  @media(max-width:480px){.specgrid{grid-template-columns:1fr;}}
-  .specitem{padding:0 0 12px;border-bottom:1px solid var(--line);}
+  .specgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px 26px;margin-top:2px;}
+  .specitem{padding:0 0 12px;border-bottom:1px solid var(--line);min-width:0;}
   .specitem .slabel{display:block;font-size:11.5px;font-weight:800;color:var(--petrol);letter-spacing:.04em;margin-bottom:5px;}
   .specitem .svalue{font-size:14.5px;color:var(--ink);line-height:1.6;}
 </style>
@@ -543,6 +542,22 @@
 
   /* ---------------- data ---------------- */
   var plans=[
+    { id:"foundation", name:"雅思先修／打底計劃（2026）", segs:["youth","beginner","budget"],
+      tag:"還沒到能準備雅思的程度，先打底；分級進階，過 B1+ 後接軌雅思。",
+      orig:"", unit:"", deal:"20,000", curLabel:"方案價", packs:[{label:"40 堂",price:"20,000",note:"1 級・500／堂",term:"10 週（1 級）"},{label:"80 堂",price:"31,200",note:"2 級・390／堂",term:"20 週（2 級）"},{label:"120 堂",price:"39,600",note:"3 級・330／堂",term:"30 週（3 級）"}],
+      tiers:"40／80／120 堂＝1／2／3 級。",
+      specs:{程度:"A1→B1+（6 級）",適合學生:"國高中生、護理師、上班族、完全新手",上課形式:"分級 live＋文法錄播",課程內容:"每級 10 週／40hr；週 4hr（2 UP＋1 聽＋1 讀）",作文批改:"無",陪跑教練:"—",分數保證:"無（過 B1+ 接軌雅思）",課程期限:"依堂數（見價格）"},
+      feats:["分級進階：A1・A1+・A2・A2+・B1・B1+","每級 10 週／40 小時 live","週 4hr：2 堂聽說讀寫UP＋1 聽力＋1 閱讀","升級需通過升級檢測","過 B1+ 檢測後接軌雅思課程"],
+      detail:"分級打底課程。單價依堂數：40 堂 500／堂（1 級）、80 堂 390／堂（2 級）、120 堂 330／堂（3 級）。欲轉雅思課程需通過 B1+ 升級檢測（J-English Hub › Challenges › Level Up Test，≥80%）。" },
+
+    { id:"shili", name:"雅思實力打造計劃（小資）", segs:["stuck","budget"],
+      tag:"時間零碎、預算有限，自己抓進度、按堂數補。",
+      orig:"", unit:"", deal:"5,500", curLabel:"方案價", packs:[{label:"10 堂",price:"5,500",note:"2 個月",term:"2 個月"},{label:"48 堂",price:"21,600",note:"半年・12 篇批改＋技巧影片擇一",term:"半年"},{label:"96 堂",price:"37,440",note:"2 年・30 篇批改＋全部技巧影片",term:"2 年"}],
+      tiers:"依堂數計價，越多越便宜。",
+      specs:{程度:"5.5 以上、卡分 5.5–6.5",適合學生:"有 1–2 科想加強的學生（不建議全科需求者，效果不好）",上課形式:"堂數制・自選團課",課程內容:"10／48／96 堂",作文批改:"48 堂 12 篇＋技巧影片擇一；96 堂 30 篇＋全部技巧影片",陪跑教練:"無",分數保證:"無",課程期限:"依堂數（見價格）"},
+      feats:["自選團體課（聽說讀寫）","作文批改：48 堂 12 篇／96 堂 30 篇","聽說讀寫技巧影片：48 堂擇一／96 堂全部","知英語專屬學習私域","可只補單科、依時間彈性上"],
+      detail:"分 10／48／96 堂，依預算與時間彈性選擇。適合有 1–2 科想加強的學生；不建議全科需求者，效果不好。48 堂贈 12 篇批改＋技巧影片擇一；96 堂贈 30 篇批改＋全部技巧影片。" },
+
     { id:"crash", name:"30 小時雅思速成班", segs:["beginner"], rec:"雅思新手推薦",
       tag:"新手入門首選，短時間把四科解題技巧打包學會。",
       orig:"原 NT$66,000", unit:"／期", deal:"24000", curLabel:"優惠價",
@@ -550,6 +565,30 @@
       specs:{程度:"剛開始準備、想快速學技巧",適合學生:"雅思新手",上課形式:"30hr 密集",課程內容:"30 小時聽說讀寫技巧",作文批改:"8 篇",陪跑教練:"有",分數保證:"無",課程期限:"約 8 週（30 小時）"},
       feats:["30hr 密集聽說讀寫技巧","8 篇作文批改","課前後完整檢測報告","雅思陪跑教練"],
       detail:"先把四科解題技巧快速建立；完成後通常需要大量練習口說與寫作。" },
+
+    { id:"exam14", name:"考前 14 天衝刺", segs:["exam"],
+      tag:"考程逼近、只差臨門一腳的短期提分。",
+      orig:"原 NT$18,000", unit:"／期", deal:"9500", curLabel:"優惠價",
+      tiers:"僅限已考過、需短期提分者。",
+      specs:{程度:"已考過雅思",適合學生:"考前短期衝分",上課形式:"一對一＋團體混合",課程內容:"5 堂一對一＋10 堂團體",作文批改:"4 篇",陪跑教練:"有",分數保證:"無",課程期限:"14 天"},
+      feats:["一對一程度檢測（約值 NT$500）","5 堂一對一量身定做","10 堂團體衝刺課","4 篇作文批改","雅思陪跑教練"],
+      detail:"專為已考過、距離下次考試很近的學生設計，集中火力做臨門一腳的提分。一對一程度檢測約值 NT$500。" },
+
+    { id:"spwr", name:"說寫衝刺班（口說＋寫作）", segs:["stuck","exam"],
+      tag:"聽力閱讀已過，只差說、寫那一關的精準補強。",
+      orig:"", unit:"", deal:"24,800", curLabel:"方案價", packs:[{label:"5.0–6.0 級",price:"24,800",note:"寫作批改 20 篇＋1對1討論 4 次",term:"30hr 課程（依排課）"},{label:"6.0–7.0 級",price:"28,800",note:"寫作批改 30 篇＋1對1討論 4 次",term:"30hr 課程（依排課）"}],
+      tiers:"分 5.0–6.0、6.0–7.0 兩級。",
+      specs:{程度:"5.0–7.0（兩級）",適合學生:"聽力閱讀已達標、只需補口說與寫作",上課形式:"30hr Live；口說最多 4 人極小班（抽取 30hrs 技巧＋實戰課表的說寫實戰）",課程內容:"技巧 10hr＋口說小班 10hr＋寫作 10hr",作文批改:"20 篇（5–6 級）／30 篇（6–7 級）＋一對一寫作討論 4 次",陪跑教練:"無",分數保證:"無",課程期限:"30 小時課程（依排課）"},
+      feats:["技巧班 10hr＋口說實戰小班 10hr","寫作 T2 分析與架構 4hr","5–6 級：寫作 T1 各題型拆解 6hr","6–7 級：T1 拆解 或 複雜句文法（擇一）6hr","作文批改 20 篇（5–6）／30 篇（6–7）","一對一寫作討論 4 次"],
+      detail:"聽讀已達標、專攻口說與寫作的結構化衝刺：抽取 30hrs 技巧與實戰課表中的說寫實戰，搭配一對一寫作討論。與小資的差別：小資是自選單科、自抓進度；說寫衝刺是有結構的兩級課程＋一對一討論。" },
+
+    { id:"sprint30", name:"雅思 30 天強效上岸專案", segs:["exam","stuck"],
+      tag:"已考過、要在短時間內大量練口說與寫作的衝刺方案。",
+      orig:"", unit:"", deal:"24,000", curLabel:"成交價",
+      tiers:"30 天密集；附贈全套技巧影片。",
+      specs:{程度:"已考過、需短期大量衝刺",適合學生:"已考過、短時間需大量練口說與寫作",上課形式:"30 天密集・線上團體課吃到飽",課程內容:"大量實戰練習＋全套技巧影片（20+ 部）",作文批改:"每週 3 篇",陪跑教練:"有",分數保證:"無",課程期限:"30 天"},
+      feats:["30 天線上團體課吃到飽","每週 3 篇作文批改","雅思陪跑教練","附贈全套技巧影片 20+ 部","劍橋 17／16／15／14 解題、聽說讀寫大師班、2026 口說題庫等"],
+      detail:"與 30hrs 速成班的差別：30hrs 著重「解題技巧」，30 天強效著重「大量練習」，並附贈全套技巧影片（劍橋 14–17 解題、聽說讀寫各科大師班、2026 口說題庫、主課程包與團體課回放等 20+ 部）。" },
 
     { id:"guar7", name:"60 天 7.0 保證班", segs:["stuck","beginner"],
       tag:"兩個月內、有保證地拿到 7.0，買的是「確定達標」。",
@@ -567,7 +606,23 @@
       specs:{程度:"目標 6.0",適合學生:"移民、工作簽證",上課形式:"吃到飽（一期 2 個月，最多續至 4 期）",課程內容:"200+ 堂＋每週 1v1 office hour",作文批改:"24 篇",陪跑教練:"有",分數保證:"有・6.0（未過免費續課）",課程期限:"一期 2 個月（最多續至 4 期）"},
       feats:["吃到飽（200+ 堂）","24 篇作文批改","每週一次 25 分鐘 1v1 office hour","每個月一次口說模擬考","專業老師陪跑","保證 6.0：未過免費續課"],
       guarIndex:5,
-      detail:"差別在「保證達標＋陪跑＋密集」。一期 2 個月，最多續三期（最多四期）。續讀為原班型內容（團體／影片），不含額外一對一、顧問諮詢或延長天數；續讀期間批改調整為每週 1 篇。續課資格：第一期達成上課數量 70 堂、影片觀看 90%（有參加 30hrs 者只需 50%）。" }
+      detail:"差別在「保證達標＋陪跑＋密集」。一期 2 個月，最多續三期（最多四期）。續讀為原班型內容（團體／影片），不含額外一對一、顧問諮詢或延長天數；續讀期間批改調整為每週 1 篇。續課資格：第一期達成上課數量 70 堂、影片觀看 90%（有參加 30hrs 者只需 50%）。" },
+
+    { id:"pass", name:"全方位學習通行證", segs:["selfstudy","budget"],
+      tag:"只想自學、看影片打底，不需要真人課。",
+      orig:"", unit:"／月", deal:"3599", curLabel:"訂閱",
+      tiers:"訂閱制，隨時取消。",
+      specs:{程度:"不限",適合學生:"自學者",上課形式:"訂閱・影片",課程內容:"30+ 門影片／100hr+",作文批改:"—",陪跑教練:"—",分數保證:"無",課程期限:"訂閱制（每月）"},
+      feats:["30+ 門影片課（雅思／文法／旅遊）","超過 100 小時內容","隨時隨地自由上課","訂閱制、輕鬆取消"],
+      detail:"純自學的影片訂閱方案，適合想先打底、預算有限或時間彈性的學生。" },
+
+    { id:"notes", name:"7.0 圓夢筆記", segs:["selfstudy","budget"],
+      tag:"極低預算的自學輔助教材。",
+      orig:"原 NT$5,990", unit:"早鳥", deal:"999", curLabel:"早鳥價",
+      tiers:"100+ PDF 筆記，終身會員。",
+      specs:{程度:"不限",適合學生:"自學者、極低預算",上課形式:"PDF 教材",課程內容:"100+ 雅思筆記 PDF",作文批改:"—",陪跑教練:"—",分數保證:"無",課程期限:"終身會員"},
+      feats:["100+ 雅思筆記 PDF","聽說讀寫一次到位","專為自學設計","終身會員福利"],
+      detail:"最低門檻的自學輔助教材，適合搭配其他自學方案或當作入門。" }
   ];
   var planById={}; plans.forEach(function(p){planById[p.id]=p;});
 
@@ -588,7 +643,7 @@
   var priceOverrides={};
   var packSel={foundation:0,shili:0};
   var schedSel=0;
-  var compareSel=["guar7","guar6","crash"];
+  var compareSel=["guar7","shili","crash"];
 
   function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
   function editMode(){return document.body.classList.contains("biz");}
@@ -713,8 +768,8 @@
 
     html+='<div class="detail-grid">';
 
-    // 方案規格
-    html+='<div class="panel"><h3>方案規格</h3><div class="specgrid">';
+    // 方案規格（獨立整行，避免與價格欄位擠壓造成文字被壓縮換行）
+    html+='<div class="panel panel-full"><h3>方案規格</h3><div class="specgrid">';
     ["程度","上課形式","課程內容","作文批改","陪跑教練","分數保證"].forEach(function(k){
       html+='<div class="specitem"><span class="slabel">'+k+'</span><span class="svalue">'+(p.specs[k]||"—")+'</span></div>';
     });
@@ -733,8 +788,8 @@
     p.feats.forEach(function(f,fi){html+='<li'+((p.guarIndex===fi)?' class="guar"':'')+'>'+f+'</li>';});
     html+='</ul></div>';
 
-    // 注意事項
-    html+='<div class="panel"><h3>注意事項</h3><div class="specgrid">';
+    // 注意事項（獨立整行，同上原因）
+    html+='<div class="panel panel-full"><h3>注意事項</h3><div class="specgrid">';
     html+='<div class="specitem"><span class="slabel">適合學生</span><span class="svalue">'+(p.specs.適合學生||"—")+'</span></div>';
     html+='<div class="specitem"><span class="slabel">課程期限</span><span class="svalue">'+termOf(p)+'</span></div>';
     html+='</div>';
