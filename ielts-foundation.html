@@ -794,7 +794,7 @@
 
     if(id==="guar7"){html+='<div class="panel panel-full"><h3>團體課課表（2026/7 月更新）</h3>'+weeklyGridHTML()+'</div>';}
     if(id==="crash"){html+='<div class="panel panel-full"><h3>開課梯次與課表</h3><p class="sched-note">每梯次 30 堂主題循環，可從任一梯次插班；選梯次看該梯八週表。</p>'+cohortTabsHTML()+cohortTableHTML()+'</div>';}
-    if(id==="foundation"){html+='<div class="panel panel-full"><h3>推薦搭配</h3><div class="bundlewrap">'+comboCardHTML("guar7","foundation")+comboCardHTML("foundation","crash")+'</div></div>';}
+    if(id==="foundation"){html+='<div class="panel panel-full"><h3>推薦搭配</h3><div class="bundlewrap" style="grid-template-columns:1fr">'+comboCardHTML("foundation","guar7")+comboCardHTML("foundation","crash")+'</div></div>';}
 
     html+='<div class="detail-actions panel-full">'
       +'<button class="btn primary" data-addcompare="'+p.id+'">加入比較</button></div>';
