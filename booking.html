@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>知英語｜口說體驗課預約</title>
+<script>
+  // 把 booking-backend.gs 部署後拿到的「網頁應用程式網址」貼在這裡
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbz2zohgxpL9A45KwZZZTxnku1M7xH-VQVd6rYZ1JfpuD9QPcFG6_z2yO0bbN5ieN30Rpg/exec';
+</script>
+<style>
+  :root{
+    --orange:#ffb98d;
+    --cream:#f8e2ca;
+    --white:#f6f4f3;
+    --taupe:#e0d1cb;
+    --dark:#607b82;
+    --grey:#a3b1b2;
+    --lightblue:#ceddde;
+    --black:#000000;
+    --red:#d97a6c;
+    --green:#7ba888;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"PingFang TC","Microsoft JhengHei","Helvetica Neue",Arial,sans-serif;
+    background:linear-gradient(180deg,var(--cream) 0%,var(--white) 100%);
+    color:var(--black);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+  }
+  .app{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    background:#fff;
+    box-shadow:0 0 30px rgba(0,0,0,0.08);
+    display:flex;
+    flex-direction:column;
+  }
+  header{
+    padding:28px 24px 12px;
+    text-align:center;
+  }
+  header img{
+    width:100px;
+    height:auto;
+    border-radius:12px;
+  }
+  .title{
+    font-size:20px;
+    font-weight:800;
+    margin:12px 0 4px;
+    color:var(--dark);
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--grey);
+    line-height:1.7;
+  }
+  main{
+    flex:1;
+    padding:12px 24px 32px;
+  }
+  .date-group{ margin-bottom:20px; }
+  .date-label{
+    display:inline-block;
+    background:var(--orange);
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    padding:4px 12px;
+    border-radius:20px;
+    margin-bottom:10px;
+  }
+  .slots{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .slot{
+    border:2px solid var(--lightblue);
+    border-radius:14px;
+    padding:10px 16px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .15s ease;
+    background:#fff;
+    user-select:none;
+  }
+  .slot:hover{ border-color:var(--orange); background:var(--cream); }
+  .slot.selected{ border-color:var(--orange); background:var(--orange); color:#fff; }
+  .field-block{ margin-top:24px; }
+  label{
+    font-size:13px;
+    color:var(--dark);
+    font-weight:700;
+    display:block;
+    margin-bottom:6px;
+  }
+  input[type=text]{
+    width:100%;
+    padding:12px 14px;
+    border:1.5px solid var(--lightblue);
+    border-radius:10px;
+    font-size:15px;
+    outline:none;
+  }
+  input[type=text]:focus{ border-color:var(--orange); }
+  .btn{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:700;
+    text-align:center;
+    border:none;
+    cursor:pointer;
+    margin-top:24px;
+    background:var(--dark);
+    color:#fff;
+    transition:transform .1s ease, opacity .15s ease;
+  }
+  .btn:active{ transform:scale(0.97); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; }
+  .msg{ font-size:13px; margin-top:14px; text-align:center; line-height:1.6; }
+  .msg.error{ color:var(--red); }
+  .msg.ok{ color:var(--green); }
+  .state{ text-align:center; padding:40px 12px; color:var(--grey); font-size:14px; }
+  .screen{ display:none; }
+  .screen.active{ display:block; animation:fadeIn .3s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  .done-icon{ font-size:48px; text-align:center; margin-bottom:8px; }
+  .done-title{ font-size:19px; font-weight:800; text-align:center; color:var(--dark); }
+  .done-detail{
+    margin-top:18px;
+    background:var(--white);
+    border-radius:14px;
+    padding:16px;
+    font-size:14px;
+    line-height:2;
+  }
+  .done-detail b{ color:var(--black); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <img src="logo.png" alt="知英語">
+    <div class="title">口說體驗課預約</div>
+    <div class="subtitle">選一個你方便的時段，輸入你的英文名字即可完成預約，<br>時段選走就不會再出現囉！</div>
+  </header>
+  <main>
+
+    <div id="loadingScreen" class="screen active">
+      <div class="state">時段載入中…</div>
+    </div>
+
+    <div id="emptyScreen" class="screen">
+      <div class="state">目前沒有開放的時段了，<br>請直接聯絡老師安排時間 🙏</div>
+    </div>
+
+    <div id="formScreen" class="screen">
+      <div id="dateGroups"></div>
+
+      <div class="field-block">
+        <label for="englishName">你的英文名字 English Name</label>
+        <input type="text" id="englishName" placeholder="例如：Anita">
+      </div>
+
+      <button class="btn" id="submitBtn" disabled>確認預約</button>
+      <div id="formMsg" class="msg"></div>
+    </div>
+
+    <div id="doneScreen" class="screen">
+      <div class="done-icon">🎉</div>
+      <div class="done-title">預約成功！</div>
+      <div class="done-detail" id="doneDetail"></div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  var selectedRow = null;
+  var slotsData = [];
+
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(function(el){ el.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+  }
+
+  function apiListSlots(){
+    return fetch(GAS_URL + '?action=list').then(function(res){ return res.json(); });
+  }
+  function apiBook(row, englishName){
+    return fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'book', row: row, englishName: englishName })
+    }).then(function(res){ return res.json(); });
+  }
+
+  function renderSlots(slots){
+    var groups = {};
+    slots.forEach(function(s){
+      if (!groups[s.date]) groups[s.date] = [];
+      groups[s.date].push(s);
+    });
+
+    var wrap = document.getElementById('dateGroups');
+    wrap.innerHTML = '';
+    Object.keys(groups).sort().forEach(function(date){
+      var groupEl = document.createElement('div');
+      groupEl.className = 'date-group';
+
+      var label = document.createElement('div');
+      label.className = 'date-label';
+      label.textContent = date;
+      groupEl.appendChild(label);
+
+      var slotsEl = document.createElement('div');
+      slotsEl.className = 'slots';
+      groups[date].forEach(function(s){
+        var pill = document.createElement('div');
+        pill.className = 'slot';
+        pill.textContent = s.time;
+        pill.dataset.row = s.row;
+        pill.addEventListener('click', function(){ selectSlot(s.row); });
+        slotsEl.appendChild(pill);
+      });
+      groupEl.appendChild(slotsEl);
+      wrap.appendChild(groupEl);
+    });
+  }
+
+  function selectSlot(row){
+    selectedRow = row;
+    document.querySelectorAll('.slot').forEach(function(el){
+      el.classList.toggle('selected', Number(el.dataset.row) === row);
+    });
+    updateSubmitState();
+  }
+
+  function updateSubmitState(){
+    var name = document.getElementById('englishName').value.trim();
+    document.getElementById('submitBtn').disabled = !(selectedRow && name);
+  }
+
+  function loadSlots(){
+    showScreen('loadingScreen');
+    apiListSlots().then(function(data){
+      if (data.error){
+        document.getElementById('formMsg').className = 'msg error';
+        document.getElementById('formMsg').textContent = data.error;
+        showScreen('formScreen');
+        return;
+      }
+      slotsData = data.slots || [];
+      if (slotsData.length === 0){
+        showScreen('emptyScreen');
+        return;
+      }
+      renderSlots(slotsData);
+      showScreen('formScreen');
+    }).catch(function(){
+      document.getElementById('formMsg').className = 'msg error';
+      document.getElementById('formMsg').textContent = '載入失敗，請重新整理頁面再試一次';
+      showScreen('formScreen');
+    });
+  }
+
+  document.getElementById('englishName').addEventListener('input', updateSubmitState);
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var btn = document.getElementById('submitBtn');
+    var msg = document.getElementById('formMsg');
+    var name = document.getElementById('englishName').value.trim();
+
+    btn.disabled = true;
+    btn.textContent = '預約中…';
+    msg.textContent = '';
+
+    apiBook(selectedRow, name).then(function(data){
+      if (data.error){
+        msg.className = 'msg error';
+        msg.textContent = data.error;
+        btn.disabled = false;
+        btn.textContent = '確認預約';
+        selectedRow = null;
+        loadSlots(); // 重新整理時段列表(可能已被別人選走)
+        return;
+      }
+      document.getElementById('doneDetail').innerHTML =
+        '英文名字：<b>' + data.name + '</b><br>' +
+        '預約日期：<b>' + data.date + '</b><br>' +
+        '預約時段：<b>' + data.time + '</b>';
+      showScreen('doneScreen');
+    }).catch(function(){
+      msg.className = 'msg error';
+      msg.textContent = '送出失敗，請重新整理頁面再試一次';
+      btn.disabled = false;
+      btn.textContent = '確認預約';
+    });
+  });
+
+  loadSlots();
+</script>
+</body>
+</html>
